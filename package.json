@@ -1,0 +1,15 @@
+{
+  "name": "vectors",
+  "version": "0.0.1",
+  "description": "An app to play with vectors.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node_modules/.bin/electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shayan Bahrainy",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^38.4.0"
+  }
+}
