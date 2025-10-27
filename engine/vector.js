@@ -20,6 +20,7 @@ export const Vector = class Vector {
         this.head = head
         this.priority = 0
         this.shape = null //Vector graphic has components but not top-level shape
+        this.fillStyle = `rgb(${Math.round((Math.random() * 256))}, ${Math.round((Math.random() * 256))}, ${Math.round((Math.random() * 256))})`
     }
 
     calculateAngle() {
@@ -51,7 +52,7 @@ export const Vector = class Vector {
                 y: this.origin.y,
                 end: this.head,
                 width: 3,
-                fillStyle: "rgb(255,0,0)",
+                fillStyle: this.fillStyle,
                 priority: 0
             },
             {
@@ -60,7 +61,7 @@ export const Vector = class Vector {
                 vertexes: 3,
                 x: this.head.x,
                 y: this.head.y,
-                fillStyle: "rgb(255,0,0)",
+                fillStyle: this.fillStyle,
                 priority: 0,
                 rotation: this.calculateAngle()
             }

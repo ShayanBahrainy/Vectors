@@ -201,7 +201,7 @@ export const Renderer = class {
                 break;
             case "line":
                 ctx.beginPath()
-                ctx.strokeStyle = "rgb(255, 0, 0)"
+                ctx.strokeStyle = object.fillStyle
                 ctx.lineWidth = object.width
                 ctx.moveTo(object.x, object.y)
                 ctx.lineTo(object.end.x, object.end.y)
