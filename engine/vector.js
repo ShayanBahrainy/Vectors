@@ -23,10 +23,9 @@ export const Vector = class Vector {
     }
 
     calculateAngle() {
-        let a = Math.abs(this.origin.x - this.head.x)
-        let b = Math.abs(this.origin.y - this.head.y)
-        let c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
-        return Math.asin((b/c)) * 180/Math.PI
+        let a = this.origin.x - this.head.x
+        let b = this.origin.y - this.head.y
+        return Math.atan2(b, a) * 180/Math.PI
     }
 
     getArrowDirection() {
@@ -63,7 +62,7 @@ export const Vector = class Vector {
                 y: this.head.y,
                 fillStyle: "rgb(255,0,0)",
                 priority: 0,
-                rotation: this.calculateAngle() * this.getArrowDirection()
+                rotation: this.calculateAngle()
             }
         ]
     }
