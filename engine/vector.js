@@ -5,6 +5,8 @@ export const Vector = class Vector {
     /** @type Point */
     static point1 = null
 
+    /**@type boolean */
+    static shouldAlignOrigin = false
 
     /** @type Renderer */
     static renderer = null //Set renderer property of Vector before using mouseClick feature
@@ -18,7 +20,9 @@ export const Vector = class Vector {
         renderer.addObject(this)
         this.origin = origin
         this.head = head
+        this.originalPoints = {origin:new Point(origin.x, origin.y), head:new Point(head.x, head.y)}
         this.priority = 0
+        this.renderer = renderer
         this.shape = null //Vector graphic has components but not top-level shape
         this.fillStyle = `rgb(${Math.round((Math.random() * 256))}, ${Math.round((Math.random() * 256))}, ${Math.round((Math.random() * 256))})`
     }
@@ -29,22 +33,38 @@ export const Vector = class Vector {
         return Math.atan2(b, a) * 180/Math.PI
     }
 
-    getArrowDirection() {
-        if (this.origin.x < this.head.x) {
-            if (this.origin.y > this.head.y) {
-                return 1
-            }
-            return -1
+    alignOrigin() {
+        let canvas = this.renderer.getCanvas()
+        if (this.origin.x > canvas.width/2) {
+            this.origin.x -= 1
+            this.head.x -= 1
         }
-        if (this.origin.x > this.head.x) {
-            if (this.origin.y > this.head.y) {
-                return 1
-            }
-            return -1
+
+        if (this.origin.x < canvas.width/2) {
+            this.origin.x += 1
+            this.head.x += 1
+        }
+
+        if (this.origin.y < canvas.height/2) {
+            this.origin.y += 1
+            this.head.y += 1
+        }
+
+        if (this.origin.y > canvas.height/2) {
+            this.origin.y -= 1
+            this.head.y -= 1
         }
     }
 
     update() {
+        if (Vector.shouldAlignOrigin) {
+            this.alignOrigin()
+        }
+        else {
+            this.origin = structuredClone(this.originalPoints.origin)
+            this.head = structuredClone(this.originalPoints.head)
+        }
+
         this.renderparts = [
             {
                 shape: "line",
@@ -72,15 +92,8 @@ export const Vector = class Vector {
 
     }
 
-    /**@param {PointerEvent} e */
-    static handleEvent(e) {
-        if (e.type == "pointerdown") {
-            const canvas = Vector.renderer.getCanvas()
-            const boundingBox = canvas.getBoundingClientRect()
-            const x = e.clientX - boundingBox.left
-            const y = e.clientY - boundingBox.top
-            Vector.mouseClick(x, y)
-        }
+    static toggleAlign() {
+        Vector.shouldAlignOrigin = !Vector.shouldAlignOrigin
     }
 
     static mouseClick(x, y) {
