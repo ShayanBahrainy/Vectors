@@ -35,6 +35,10 @@ function handleEvent(e) {
     if (e.type == "change" && e.target.id == "mode-select") {
         mode = e.target.value
     }
+
+    if (e.type == "keypress" && (e.key == 'd' || e.key == 'D')) {
+        Vector.selected?.destruct()
+    }
 }
 
 window.addEventListener("load", function () {
@@ -42,6 +46,7 @@ window.addEventListener("load", function () {
     Vector.renderer = renderer
     new Grid(renderer)
     document.addEventListener("pointerdown", handleEvent)
+    this.document.addEventListener("keypress", handleEvent)
     this.document.getElementById("align-origin").addEventListener("change", handleEvent)
     this.document.getElementById("mode-select").addEventListener("change", handleEvent)
 

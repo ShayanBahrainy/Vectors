@@ -25,7 +25,7 @@ export const Vector = class Vector {
     */
     constructor(renderer, origin, head) {
         renderer.addObject(this)
-        Vector.vectors.push(this)
+        Vector.addVector(this)
         this.origin = origin
         this.head = head
         this.originalPoints = {origin:new Point(origin.x, origin.y), head:new Point(head.x, head.y)}
@@ -132,6 +132,32 @@ export const Vector = class Vector {
         }
 
         return otherPoint.distance(intersection)
+    }
+
+    destruct() {
+        this.renderer.removeObject(this)
+        Vector.remove(this)
+    }
+
+    /**
+     *
+     * @param {Vector} vector
+     */
+    static addVector(vector){
+        /* Add Vector */
+
+        this.vectors.push(vector)
+
+    }
+    /**
+     *
+     * @param {Vector} vector
+     */
+    static remove(vector) {
+        let index = this.vectors.indexOf(vector)
+        if (index > -1) {
+            this.vectors.splice(index, 1)
+        }
     }
 
     static toggleAlign() {
