@@ -1,6 +1,8 @@
 export const Point = class Point {
-    /**@param {Number} x*/
-    /**@param {Number} y*/
+    /**
+     * @param {Number} x
+     * @param {Number} y
+    */
     constructor(x, y) {
         /**@var {Number} x*/
         this.x = x
@@ -17,5 +19,9 @@ export const Point = class Point {
     /**@param {Point} otherPoint */
     lessThan(otherPoint) {
         return this.x < otherPoint.x 
+    }
+    /**@param {Point} otherPoint*/
+    distance(otherPoint) {
+        return Math.sqrt(Math.pow(otherPoint.x - this.x, 2) + Math.pow(otherPoint.y - this.y, 2))
     }
 }

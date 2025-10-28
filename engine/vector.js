@@ -1,3 +1,4 @@
+import { Line } from "./line.js"
 import {Point} from "./point.js"
 import { Renderer } from "./renderer.js"
 
@@ -11,6 +12,12 @@ export const Vector = class Vector {
     /** @type Renderer */
     static renderer = null //Set renderer property of Vector before using mouseClick feature
 
+    /** @type Array */
+    static vectors = []
+
+    /**@type Vector */
+    static selected = null;
+
     /** @constructor
      *  @param {Renderer} renderer
      *  @param {Point} origin
@@ -18,6 +25,7 @@ export const Vector = class Vector {
     */
     constructor(renderer, origin, head) {
         renderer.addObject(this)
+        Vector.vectors.push(this)
         this.origin = origin
         this.head = head
         this.originalPoints = {origin:new Point(origin.x, origin.y), head:new Point(head.x, head.y)}
@@ -25,6 +33,7 @@ export const Vector = class Vector {
         this.renderer = renderer
         this.shape = null //Vector graphic has components but not top-level shape
         this.fillStyle = `rgb(${Math.round((Math.random() * 256))}, ${Math.round((Math.random() * 256))}, ${Math.round((Math.random() * 256))})`
+        this.selected = false
     }
 
     calculateAngle() {
@@ -56,6 +65,16 @@ export const Vector = class Vector {
         }
     }
 
+    toggleSelect() {
+        this.selected = !this.selected
+        if (this.selected) {
+            Vector.selected = this
+        }
+        else {
+            Vector.selected = null
+        }
+    }
+
     update() {
         if (Vector.shouldAlignOrigin) {
             this.alignOrigin()
@@ -71,13 +90,13 @@ export const Vector = class Vector {
                 x: this.origin.x,
                 y: this.origin.y,
                 end: this.head,
-                width: 3,
+                width: this.selected ? 5 : 3,
                 fillStyle: this.fillStyle,
                 priority: 0
             },
             {
                 shape: "polygon",
-                apothem: 10,
+                apothem: this.selected ? 15 : 10,
                 vertexes: 3,
                 x: this.head.x,
                 y: this.head.y,
@@ -90,6 +109,29 @@ export const Vector = class Vector {
 
     collision () {
 
+    }
+
+    /** @param {Point} otherPoint */
+    distanceFromPoint(otherPoint) {
+
+        let m = (this.head.y - this.origin.y) / (this.head.x - this.origin.x)
+        let b = this.origin.y - (m * this.origin.x)
+
+
+        let m_ = -(1/m)
+        let b_ = otherPoint.y - (m_ * otherPoint.x)
+
+        let intersection_x = (b_ - b)/(m-m_)
+        let intersection_y = (m * intersection_x) + b
+
+        let intersection = new Point(intersection_x, intersection_y)
+
+        //If the intersection (closest point on line) is outside of the segment that is the Vector, we return the minimum distance to an endpoint
+        if (intersection.x < Math.min(this.origin.x, this.head.x) || intersection.x > Math.max(this.origin.x, this.head.x)) {
+            return Math.min(otherPoint.distance(this.origin), otherPoint.distance(this.head))
+        }
+
+        return otherPoint.distance(intersection)
     }
 
     static toggleAlign() {
@@ -105,5 +147,25 @@ export const Vector = class Vector {
             new Vector(Vector.renderer, Vector.point1, point)
             Vector.point1 = null
         }
+    }
+
+
+    /**
+     * @param {Point} point
+     * @returns {Vector}
+    */
+    static getFromPoint(point) {
+        let closest = null
+        let closestDistance = Number.POSITIVE_INFINITY
+
+        for (let i = 0; i < Vector.vectors.length; ++i) {
+            const distance = Vector.vectors[i].distanceFromPoint(point)
+            if (distance < closestDistance) {
+                closest = Vector.vectors[i]
+                closestDistance = distance
+            }
+        }
+
+        return closest
     }
 }

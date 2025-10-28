@@ -39,4 +39,5 @@ canvas {
     z-index: 1;
     transition-duration: 1s;
     background-color: white;
+    gap: 20px;
 }
