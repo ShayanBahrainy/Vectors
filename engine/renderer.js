@@ -14,6 +14,7 @@ export const Renderer = class {
     this.tick = this.tick.bind(this)
     this.collisionChecks = this.collisionChecks.bind(this)
     this.calculateSpatialMap = this.calculateSpatialMap.bind(this)
+    this.removeObject = this.removeObject.bind(this)
     this.intervalId = setInterval(this.tick,Math.round(1000/this.fps))
   }
 
@@ -217,10 +218,11 @@ export const Renderer = class {
   getObjects() {
     return this.objects
   }
-  removeObject(self, object){
-    var index = self.objects.indexOf(object)
-    if (index != -1){
-        self.objects.splice(index,1)
+
+  removeObject(object){
+    var index = this.objects.indexOf(object)
+    if (index > -1){
+        this.objects.splice(index,1)
     }
   }
 
