@@ -13,9 +13,6 @@ export const Point = class Point {
     add(point) {
         return new Point(this.x + point.x, this.y + point.y)
     }
-    add (x, y) {
-        return new Point(this.x + x, this.y + y)
-    }
     /**@param {Point} otherPoint */
     lessThan(otherPoint) {
         return this.x < otherPoint.x 
