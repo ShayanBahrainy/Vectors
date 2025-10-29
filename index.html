@@ -22,10 +22,24 @@
         <input type="checkbox" name="align-origin" id="align-origin">
         <label for="align-origin">Align with Origin</label>
       </div>
-      <select id="mode-select">
+
+      <div class="model-select-div">
+        <label for="mode">Mode</label>
+        <select id="mode-select" name="mode">
         <option value="create" selected>Create</option>
         <option value="select">Select</option>
       </select>
+      </div>
+
+      <div class="operation-select-div">
+        <label for="operation">Operation</label>
+        <select id="operation-select" name="operation">
+          <option value="none" selected>None</option>
+          <option value="addition">Add</option>
+          <option value="substraction">Substract</option>
+        </select>
+      </div>
+
     </div>
   </body>
 </html>

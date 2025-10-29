@@ -1,4 +1,3 @@
-import { Line } from "./line.js"
 import {Point} from "./point.js"
 import { Renderer } from "./renderer.js"
 
@@ -42,6 +41,27 @@ export const Vector = class Vector {
         return Math.atan2(b, a) * 180/Math.PI
     }
 
+    /**
+     * Moves the Vector to have its origin at `point`
+     * @param {Point} point
+     */
+
+    originAt(point) {
+        let dx = this.head.x - this.origin.x
+        let dy = this.head.y - this.origin.y
+
+        this.origin.x = point.x
+        this.origin.y = point.y
+
+        this.head.x = this.origin.x + dx
+        this.head.y = this.origin.y + dy
+
+        this.originalPoints.head.x = this.head.x
+        this.originalPoints.head.y = this.head.y
+        this.originalPoints.origin.x = this.origin.x
+        this.originalPoints.origin.y = this.origin.y
+    }
+
     alignOrigin() {
         let canvas = this.renderer.getCanvas()
         if (this.origin.x > canvas.width/2) {
@@ -80,8 +100,10 @@ export const Vector = class Vector {
             this.alignOrigin()
         }
         else {
-            this.origin = structuredClone(this.originalPoints.origin)
-            this.head = structuredClone(this.originalPoints.head)
+            this.origin.x = this.originalPoints.origin.x
+            this.origin.y = this.originalPoints.origin.y
+            this.head.x = this.originalPoints.head.x
+            this.head.y = this.originalPoints.head.y
         }
 
         this.renderparts = [
