@@ -185,6 +185,15 @@ export const Vector = class Vector {
     static toggleAlign() {
         Vector.shouldAlignOrigin = !Vector.shouldAlignOrigin
     }
+    /**
+     * Force align to `value`
+     * @param {boolean} value
+     */
+    static forceAlign(value) {
+        Vector.shouldAlignOrigin = value
+    }
+
+
 
     static mouseClick(x, y) {
         let point = new Point(x, y)

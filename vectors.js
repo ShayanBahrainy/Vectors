@@ -40,9 +40,17 @@ function handleEvent(e) {
             addition.placeVector(new Point(x, y))
             status = 0
         }
+        if (status == 2) {
+            Vector.forceAlign(false)
+            document.getElementById("align-origin").setAttribute("disabled", true)
+
+        }
+
+        if (status != 2) {
+            document.getElementById("align-origin").removeAttribute("disabled")
+        }
     }
 
-    if (e.type == "pointermove" && operation == "addition") {
         const canvas = Vector.renderer.getCanvas()
         const boundingBox = canvas.getBoundingClientRect()
         const x = e.clientX - boundingBox.left
