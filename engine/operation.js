@@ -88,4 +88,9 @@ export const Operation = class {
         }
     }
 
+    reset() {
+        this.vector = null
+        this.parameters = []
+    }
+
 }

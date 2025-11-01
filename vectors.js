@@ -3,12 +3,14 @@ import { Renderer } from "./engine/renderer.js"
 import { Vector } from "./engine/vector.js"
 import { Point } from "./engine/point.js"
 import { Addition } from "./engine/addition.js"
+import { Subtraction } from "./engine/subtraction.js"
 
 let renderer
 let mode = "create"
 let operation = "none"
 let status = 0
 let addition
+let subtraction
 
 
 function handleEvent(e) {
@@ -40,6 +42,16 @@ function handleEvent(e) {
             addition.placeVector(new Point(x, y))
             status = 0
         }
+
+        if (operation == "subtraction" && status < 2) {
+            subtraction.addParameter(newSelect)
+            status += 1
+        }
+        else if (operation == "subtraction" && status == 2) {
+            subtraction.placeVector(new Point(x, y))
+            status = 0
+        }
+
         if (status == 2) {
             Vector.forceAlign(false)
             document.getElementById("align-origin").setAttribute("disabled", true)
@@ -51,13 +63,18 @@ function handleEvent(e) {
         }
     }
 
+    if (e.type == "pointermove") {
         const canvas = Vector.renderer.getCanvas()
         const boundingBox = canvas.getBoundingClientRect()
         const x = e.clientX - boundingBox.left
         const y = e.clientY - boundingBox.top
 
-        if (status == 2) {
+        if (status == 2 && operation == "addition") {
             addition.attemptPlace(new Point(x, y))
+        }
+
+        if (status == 2 && operation == "subtraction") {
+            subtraction.attemptPlace(new Point(x, y))
         }
     }
 
@@ -71,6 +88,9 @@ function handleEvent(e) {
 
     if (e.type == "change" && e.target.id == "operation-select") {
         operation = e.target.value
+        status = 0
+        addition.reset()
+        subtraction.reset()
     }
 
     if (e.type == "keypress" && (e.key == 'd' || e.key == 'D')) {
@@ -84,6 +104,7 @@ window.addEventListener("load", function () {
     new Grid(renderer)
 
     addition = new Addition(renderer)
+    subtraction = new Subtraction(renderer)
 
     document.addEventListener("pointerdown", handleEvent)
     this.document.addEventListener("pointermove", handleEvent)
