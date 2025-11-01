@@ -55,6 +55,7 @@ function handleEvent(e) {
         if (status == 2) {
             Vector.forceAlign(false)
             document.getElementById("align-origin").setAttribute("disabled", true)
+            document.getElementById("align-origin").checked = false
 
         }
 
