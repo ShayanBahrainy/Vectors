@@ -18,27 +18,27 @@
   <body>
     <button class="toolbox">Toolbox</button>
     <div class="toolmenu closed">
-      <div class="align-vectors-div">
-        <input type="checkbox" name="align-origin" id="align-origin">
-        <label for="align-origin">Align with Origin</label>
-      </div>
+      <div class="menu-flex">
+        <div class="align-vectors-div">
+          <input type="checkbox" name="align-origin" id="align-origin">
+          <label for="align-origin">Align</label>
+        </div>
 
-      <div class="model-select-div">
-        <label for="mode">Mode</label>
-        <select id="mode-select" name="mode">
-          <option value="create" selected>Create</option>
-          <option value="select">Select</option>
-        </select>
-      </div>
+        <div class="model-select-div">
+          <label for="mode">Mode</label> <br>
+          <select id="mode-select" name="mode" class="mode-select">
+            <option value="create" selected>Create</option>
+            <option value="select">Select</option>
+          </select>
+        </div>
 
-      <div class="operation-select-div">
-        <label for="operation">Operation</label>
-        <select id="operation-select" name="operation">
-          <option value="none" selected>None</option>
-          <option value="addition">Add</option>
-          <option value="subtraction">Substract</option>
-        </select>
-      </div>
+        <div class="operation-select-div">
+          <label for="operation">Operation</label>
+          <select id="operation-select" name="operation" class="operation-select">
+            <option value="addition">Add</option>
+            <option value="subtraction">Substract</option>
+          </select>
+        </div>
 
         <div class="transform-select">
           <div class="transform-input">
