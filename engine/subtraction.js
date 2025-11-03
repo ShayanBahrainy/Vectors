@@ -24,7 +24,6 @@ export const Subtraction = class extends Operation {
         let dx = -(this.parameters[1].head.x - this.parameters[1].origin.x)
         let dy = -(this.parameters[1].head.y - this.parameters[1].origin.y)
 
-        //We add 0 to make sure it's a copy, not a reference
-        return new Vector(this.renderer, this.parameters[0].origin.add(new Point(0, 0)), this.parameters[0].head.add(new Point(dx, dy)))
+        return new Vector(this.renderer, this.parameters[0].origin.copy(), this.parameters[0].head.add(new Point(dx, dy)))
     }
 }

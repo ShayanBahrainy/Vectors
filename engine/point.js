@@ -21,4 +21,8 @@ export const Point = class Point {
     distance(otherPoint) {
         return Math.sqrt(Math.pow(otherPoint.x - this.x, 2) + Math.pow(otherPoint.y - this.y, 2))
     }
+
+    copy() {
+        return new Point(this.x, this.y)
+    }
 }
