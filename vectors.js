@@ -74,6 +74,10 @@ function handleEvent(e) {
         if (status != 2) {
             document.getElementById("align-origin").removeAttribute("disabled")
         }
+
+        if (operation == "deletion") {
+            newSelect.destruct()
+        }
     }
 
     if (e.type == "pointermove") {
@@ -121,15 +125,12 @@ function handleEvent(e) {
         Vector.updateBasis(basisObject)
     }
 
-    if (e.type == "keypress" && (e.key == 'd' || e.key == 'D')) {
-        Vector.selected?.destruct()
-    }
-
     if (e.type == "click" && e.target.id == "reset-identity-button") {
         document.querySelectorAll(".identity-zero-start").forEach(function (element, _, _2)  {
             element.value = "0"
             element.dispatchEvent(new Event('change', { bubbles: true }));
         })
+
         document.querySelectorAll(".identity-one-start").forEach(function (element, _, _2)  {
             element.value = "1"
             element.dispatchEvent(new Event('change', { bubbles: true }));
@@ -172,7 +173,6 @@ window.addEventListener("load", function () {
 
     document.addEventListener("pointerdown", handleEvent)
     this.document.addEventListener("pointermove", handleEvent)
-    this.document.addEventListener("keypress", handleEvent)
     this.document.getElementById("align-origin").addEventListener("change", handleEvent)
     this.document.getElementById("mode-select").addEventListener("change", handleEvent)
     this.document.getElementById("operation-select").addEventListener("change", handleEvent)
