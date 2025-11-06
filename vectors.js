@@ -17,6 +17,13 @@ let basis = [
     [1, 0]
 ]
 
+let targetbasis = [
+    [0, 1],
+    [1, 0]
+]
+
+let animate_transform = false
+
 
 function handleEvent(e) {
     if (e.type == "pointerdown" && document.elementFromPoint(e.clientX, e.clientY).tagName == "CANVAS" && mode == "create") {
@@ -102,7 +109,14 @@ function handleEvent(e) {
     if (e.type == "change" && e.target.classList.contains("transform-digit")) {
         let x = e.target.getAttribute("data-coordinate").split(",")[0]
         let y = e.target.getAttribute("data-coordinate").split(",")[1]
-        basis[x][y] = parseInt(e.target.value)
+
+        //We always update targetbasis, but basis is only updated directly when we are not animating
+        if (!animate_transform) {
+            basis[x][y] = parseInt(e.target.value)
+        }
+
+        targetbasis[x][y] = parseInt(e.target.value)
+
         const basisObject = new Basis(new VectorInert(new Point(0, 0), new Point(basis[0][0], basis[1][0])), new VectorInert(new Point(0, 0), new Point(basis[0][1], basis[1][1])))
         Vector.updateBasis(basisObject)
     }
@@ -120,8 +134,32 @@ function handleEvent(e) {
             element.value = "1"
             element.dispatchEvent(new Event('change', { bubbles: true }));
         })
-
     }
+
+    if (e.type == "click" && e.target.id == "animate-transform-input") {
+        animate_transform = !animate_transform
+    }
+
+}
+
+function animateBasis() {
+    if (!animate_transform) return
+
+    for (let i = 0; i < targetbasis.length; i++) {
+        for (let j = 0; j < targetbasis[0].length; j++) {
+            if (Math.abs(targetbasis[i][j] - basis[i][j]) > 0.1) {
+
+                const delta = targetbasis[i][j] - basis[i][j];
+                basis[i][j] += delta / 60.0;
+                if (Math.abs(delta) <= 0.11) {
+                    basis[i][j] = targetbasis[i][j]
+                }
+            }
+        }
+    }
+
+    const basisObject = new Basis(new VectorInert(new Point(0, 0), new Point(basis[0][0], basis[1][0])), new VectorInert(new Point(0, 0), new Point(basis[0][1], basis[1][1])))
+    Vector.updateBasis(basisObject)
 }
 
 window.addEventListener("load", function () {
@@ -139,6 +177,8 @@ window.addEventListener("load", function () {
     this.document.getElementById("mode-select").addEventListener("change", handleEvent)
     this.document.getElementById("operation-select").addEventListener("change", handleEvent)
     this.document.getElementById("reset-identity-button").addEventListener("click", handleEvent)
+    this.document.getElementById("animate-transform-input").addEventListener("click", handleEvent)
+    this.setInterval(animateBasis, 1000/60)
 
     this.document.querySelectorAll(".transform-digit").forEach(function (element, key, parent) {
         element.addEventListener("change", handleEvent)
