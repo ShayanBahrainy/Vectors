@@ -48,6 +48,11 @@ function handleEvent(e) {
         }
         newSelect?.toggleSelect()
 
+        if (operation == "deletion") {
+            newSelect.destruct()
+            return //Don't do any of the other stuff for deletions
+        }
+
         if (status == 2) {
             if (operation == "addition") {
                 addition.placeVector(new Point(x, y))
@@ -83,10 +88,6 @@ function handleEvent(e) {
 
         if (status != 2) {
             document.getElementById("align-origin").removeAttribute("disabled")
-        }
-
-        if (operation == "deletion") {
-            newSelect.destruct()
         }
     }
 
