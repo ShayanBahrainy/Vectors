@@ -4,6 +4,7 @@ import { Vector, VectorInert } from "./engine/vector.js"
 import { Point } from "./engine/point.js"
 import { Addition } from "./engine/addition.js"
 import { Subtraction } from "./engine/subtraction.js"
+import { Average } from "./engine/average.js"
 import { Basis } from "./engine/basis.js"
 
 let renderer
@@ -12,6 +13,7 @@ let operation = "addition"
 let status = 0
 let addition
 let subtraction
+let average
 let basis = [
     [0, 1],
     [1, 0]
@@ -46,22 +48,30 @@ function handleEvent(e) {
         }
         newSelect?.toggleSelect()
 
-        if (operation == "addition" && status < 2) {
-            addition.addParameter(newSelect)
-            status += 1
-        }
-        else if (operation == "addition" && status == 2) {
-            addition.placeVector(new Point(x, y))
+        if (status == 2) {
+            if (operation == "addition") {
+                addition.placeVector(new Point(x, y))
+            }
+            if (operation == "subtraction") {
+                subtraction.placeVector(new Point(x, y))
+            }
+            if (operation == "average") {
+                average.placeVector(new Point(x, y))
+            }
             status = 0
         }
 
-        if (operation == "subtraction" && status < 2) {
-            subtraction.addParameter(newSelect)
+        else if (status < 2) {
+            if (operation == "addition") {
+                addition.addParameter(newSelect)
+            }
+            if (operation == "subtraction") {
+                subtraction.addParameter(newSelect)
+            }
+            if (operation == "average") {
+                average.addParameter(newSelect)
+            }
             status += 1
-        }
-        else if (operation == "subtraction" && status == 2) {
-            subtraction.placeVector(new Point(x, y))
-            status = 0
         }
 
         if (status == 2) {
@@ -86,12 +96,18 @@ function handleEvent(e) {
         const x = e.clientX - boundingBox.left
         const y = e.clientY - boundingBox.top
 
-        if (status == 2 && operation == "addition") {
-            addition.attemptPlace(new Point(x, y))
-        }
+        if (status == 2) {
+            if (operation == "addition") {
+                addition.attemptPlace(new Point(x, y))
+            }
 
-        if (status == 2 && operation == "subtraction") {
-            subtraction.attemptPlace(new Point(x, y))
+            if (operation == "subtraction") {
+                subtraction.attemptPlace(new Point(x, y))
+            }
+
+            if (operation == "average") {
+                average.attemptPlace(new Point(x, y))
+            }
         }
     }
 
@@ -108,6 +124,7 @@ function handleEvent(e) {
         status = 0
         addition.reset()
         subtraction.reset()
+        average.reset()
     }
 
     if (e.type == "change" && e.target.classList.contains("transform-digit")) {
@@ -170,6 +187,7 @@ window.addEventListener("load", function () {
 
     addition = new Addition(renderer)
     subtraction = new Subtraction(renderer)
+    average = new Average(renderer)
 
     document.addEventListener("pointerdown", handleEvent)
     this.document.addEventListener("pointermove", handleEvent)
