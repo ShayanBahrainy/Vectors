@@ -1,6 +1,6 @@
 {
   "name": "vectors",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "An app to play with vectors.",
   "main": "main.js",
   "scripts": {
