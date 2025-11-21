@@ -5,6 +5,8 @@ canvas {
     position: absolute;
     left: 0%;
     top: 0%;
+    width: 100%;
+    height: 100%;
     background-color: black;
 }
 
@@ -21,15 +23,19 @@ canvas {
 }
 
 .closed {
-    transform: translateY(-100%);
+    transform: translateY(-200%);;
 }
 
 .opened {
     transform: translateY(0%);
 }
 
+.scalar-input {
+    width: 3em;
+}
+
 .toolmenu {
-    position: absolute;
+    position: fixed;
     left: 85%;
     width: 15%;
     height: 90%;
@@ -105,4 +111,8 @@ canvas {
 
 .mode-select {
     background-color: blanchedalmond;
+}
+
+.disabled {
+    display: none;
 }

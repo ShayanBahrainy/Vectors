@@ -6,14 +6,13 @@ import { Addition } from "./engine/addition.js"
 import { Subtraction } from "./engine/subtraction.js"
 import { Average } from "./engine/average.js"
 import { Basis } from "./engine/basis.js"
+import { ScalarMultiplication } from "./engine/scalarmultiplication.js"
 
 let renderer
 let mode = "create"
 let operation = "addition"
 let status = 0
-let addition
-let subtraction
-let average
+let operations = {}
 let basis = [
     [0, 1],
     [1, 0]
@@ -53,40 +52,24 @@ function handleEvent(e) {
             return //Don't do any of the other stuff for deletions
         }
 
-        if (status == 2) {
-            if (operation == "addition") {
-                addition.placeVector(new Point(x, y))
-            }
-            if (operation == "subtraction") {
-                subtraction.placeVector(new Point(x, y))
-            }
-            if (operation == "average") {
-                average.placeVector(new Point(x, y))
-            }
+        if (status == operations[operation].parameterCount) {
+            operations[operation].placeVector(new Point(x, y))
             status = 0
         }
 
-        else if (status < 2) {
-            if (operation == "addition") {
-                addition.addParameter(newSelect)
-            }
-            if (operation == "subtraction") {
-                subtraction.addParameter(newSelect)
-            }
-            if (operation == "average") {
-                average.addParameter(newSelect)
-            }
+        else if (status < operations[operation].parameterCount) {
+            operations[operation].addParameter(newSelect)
             status += 1
         }
 
-        if (status == 2) {
+        if (status == operations[operation].parameterCount) {
             Vector.forceAlign(false)
             document.getElementById("align-origin").setAttribute("disabled", true)
             document.getElementById("align-origin").checked = false
 
         }
 
-        if (status != 2) {
+        if (status != operations[operation].parameterCount) {
             document.getElementById("align-origin").removeAttribute("disabled")
         }
     }
@@ -97,18 +80,8 @@ function handleEvent(e) {
         const x = e.clientX - boundingBox.left
         const y = e.clientY - boundingBox.top
 
-        if (status == 2) {
-            if (operation == "addition") {
-                addition.attemptPlace(new Point(x, y))
-            }
-
-            if (operation == "subtraction") {
-                subtraction.attemptPlace(new Point(x, y))
-            }
-
-            if (operation == "average") {
-                average.attemptPlace(new Point(x, y))
-            }
+        if (status == operations[operation].parameterCount) {
+            operations[operation].attemptPlace(new Point(x, y))
         }
     }
 
@@ -120,12 +93,17 @@ function handleEvent(e) {
         mode = e.target.value
     }
 
+    if (e.type == "change" && e.target.id == "scalar-input") {
+        operations["scalar-multiplication"].setK(e.target.value)
+    }
+
     if (e.type == "change" && e.target.id == "operation-select") {
         operation = e.target.value
         status = 0
-        addition.reset()
-        subtraction.reset()
-        average.reset()
+        for (let operation of Object.values(operations)) {
+            operation.reset()
+        }
+        document.querySelector(".scalar-div").classList.toggle("disabled", e.target.value != "scalar-multiplication")
     }
 
     if (e.type == "change" && e.target.classList.contains("transform-digit")) {
@@ -142,6 +120,8 @@ function handleEvent(e) {
         const basisObject = new Basis(new VectorInert(new Point(0, 0), new Point(basis[0][0], basis[1][0])), new VectorInert(new Point(0, 0), new Point(basis[0][1], basis[1][1])))
         Vector.updateBasis(basisObject)
     }
+
+
 
     if (e.type == "click" && e.target.id == "reset-identity-button") {
         document.querySelectorAll(".identity-zero-start").forEach(function (element, _, _2)  {
@@ -186,9 +166,10 @@ window.addEventListener("load", function () {
     Vector.renderer = renderer
     new Grid(renderer)
 
-    addition = new Addition(renderer)
-    subtraction = new Subtraction(renderer)
-    average = new Average(renderer)
+    operations["addition"] = new Addition(renderer)
+    operations["subtraction"] = new Subtraction(renderer)
+    operations["average"] = new Average(renderer)
+    operations["scalar-multiplication"] = new ScalarMultiplication(renderer)
 
     document.addEventListener("pointerdown", handleEvent)
     this.document.addEventListener("pointermove", handleEvent)
@@ -197,6 +178,7 @@ window.addEventListener("load", function () {
     this.document.getElementById("operation-select").addEventListener("change", handleEvent)
     this.document.getElementById("reset-identity-button").addEventListener("click", handleEvent)
     this.document.getElementById("animate-transform-input").addEventListener("click", handleEvent)
+    this.document.getElementById("scalar-input").addEventListener("change", handleEvent)
     this.setInterval(animateBasis, 1000/60)
 
     this.document.querySelectorAll(".transform-digit").forEach(function (element, key, parent) {

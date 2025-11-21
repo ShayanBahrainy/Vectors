@@ -15,7 +15,7 @@ export const Point = class Point {
     }
     /**@param {Point} otherPoint */
     lessThan(otherPoint) {
-        return this.x < otherPoint.x 
+        return this.x < otherPoint.x
     }
     /**@param {Point} otherPoint*/
     distance(otherPoint) {

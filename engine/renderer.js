@@ -258,8 +258,6 @@ export const Renderer = class {
     context.closePath()
   }
 
-
-
   addObject(object){
     this.objects.push(object)
   }
